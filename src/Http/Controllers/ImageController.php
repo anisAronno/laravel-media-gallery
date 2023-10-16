@@ -2,7 +2,8 @@
 
 namespace AnisAronno\MediaGallery\Http\Controllers;
 
-use AnisAronno\MediaGallery\Helpers\CacheHelper;
+use AnisAronno\LaravelCacheMaster\CacheControl;
+use AnisAronno\MediaGallery\Helpers\CacheKey;
 use AnisAronno\MediaGallery\Helpers\ImageDataProcessor;
 use AnisAronno\MediaGallery\Http\Requests\StoreImageRequest;
 use AnisAronno\MediaGallery\Http\Requests\UpdateImageRequest;
@@ -30,11 +31,11 @@ class ImageController extends Controller
         $endDate = $request->query('endDate', '');
         $page = $request->query('page', 1);
 
-        $imageCacheKey = CacheHelper::getImageCacheKey();
+        $imageCacheKey = CacheKey::getImageCacheKey();
 
         $key =  $imageCacheKey.md5(serialize([$orderBy, $order,  $page, $search, $startDate, $endDate,  ]));
 
-        $images = CacheHelper::init($imageCacheKey)->remember(
+        $images = CacheControl::init($imageCacheKey)->remember(
             $key,
             now()->addDay(),
             function () use ($request) {
@@ -78,7 +79,7 @@ class ImageController extends Controller
     {
         $data = ImageDataProcessor::process($request);
         $data['title'] = $request->input('title', 'Image');
-        $data['user_id'] = $request->user()?->id ;
+        $data['user_id'] = $request->user() ? $request->user() : $request->user()->id ;
 
         try {
             Image::create($data);

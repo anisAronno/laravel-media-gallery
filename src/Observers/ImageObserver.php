@@ -2,7 +2,8 @@
 
 namespace AnisAronno\MediaGallery\Observers;
 
-use AnisAronno\MediaGallery\Helpers\CacheHelper;
+use AnisAronno\LaravelCacheMaster\CacheControl;
+use AnisAronno\MediaGallery\Helpers\CacheKey;
 use AnisAronno\MediaGallery\Models\Image;
 
 class ImageObserver
@@ -11,7 +12,7 @@ class ImageObserver
 
     public function __construct()
     {
-        $this->imageCacheKey = CacheHelper::getImageCacheKey();
+        $this->imageCacheKey = CacheKey::getImageCacheKey();
     }
 
     /**
@@ -22,7 +23,7 @@ class ImageObserver
      */
     public function created(Image $image)
     {
-        CacheHelper::forgetCache($this->imageCacheKey);
+        CacheControl::forgetCache($this->imageCacheKey);
     }
 
     /**
@@ -33,7 +34,7 @@ class ImageObserver
      */
     public function updated(Image $image)
     {
-        CacheHelper::forgetCache($this->imageCacheKey);
+        CacheControl::forgetCache($this->imageCacheKey);
     }
 
     /**
@@ -44,7 +45,7 @@ class ImageObserver
      */
     public function deleted(Image $image)
     {
-        CacheHelper::forgetCache($this->imageCacheKey);
+        CacheControl::forgetCache($this->imageCacheKey);
     }
 
     /**
@@ -55,7 +56,7 @@ class ImageObserver
      */
     public function restored(Image $image)
     {
-        CacheHelper::forgetCache($this->imageCacheKey);
+        CacheControl::forgetCache($this->imageCacheKey);
     }
 
     /**
@@ -66,6 +67,6 @@ class ImageObserver
      */
     public function forceDeleted(Image $image)
     {
-        CacheHelper::forgetCache($this->imageCacheKey);
+        CacheControl::forgetCache($this->imageCacheKey);
     }
 }
