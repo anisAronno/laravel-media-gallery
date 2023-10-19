@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea50707c5bbb7b1a6a1858cfa32706d7",
+    "content-hash": "3d278fa2ee08df92bf1b6c5bad1cb006",
     "packages": [
         {
             "name": "anisaronno/laravel-cache-control",
@@ -69,69 +69,6 @@
                 "source": "https://github.com/anisAronno/laravel-cache-control/tree/v0.0.1"
             },
             "time": "2023-10-13T04:38:27+00:00"
-        },
-        {
-            "name": "anisaronno/laravel-media-helper",
-            "version": "0.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/anisAronno/Laravel-Media-Helper.git",
-                "reference": "cedfb05497b736c351245620d2d46c9d5dd33ed0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/anisAronno/Laravel-Media-Helper/zipball/cedfb05497b736c351245620d2d46c9d5dd33ed0",
-                "reference": "cedfb05497b736c351245620d2d46c9d5dd33ed0",
-                "shasum": ""
-            },
-            "require": {
-                "laravel/framework": "^8.0|^9.0|^10.0",
-                "php": "^7.4|^8.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.4",
-                "orchestra/testbench": "^8.0",
-                "pestphp/pest": "^1.21",
-                "phpunit/phpunit": "^9.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "AnisAronno\\MediaHelper\\MediaHelperServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "AnisAronno\\MediaHelper\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "MD. Anichur Rahaman",
-                    "email": "contact@anichur.com",
-                    "homepage": "https://anichur.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Laravel Media Helper",
-            "homepage": "https://github.com/anisAronno/laravel-media-helper",
-            "keywords": [
-                "laravel",
-                "laravel-media-helper",
-                "wedevs",
-                "wordpress"
-            ],
-            "support": {
-                "issues": "https://github.com/anisAronno/Laravel-Media-Helper/issues",
-                "source": "https://github.com/anisAronno/Laravel-Media-Helper/tree/v0.1.0"
-            },
-            "time": "2023-10-12T17:51:53+00:00"
         },
         {
             "name": "brick/math",

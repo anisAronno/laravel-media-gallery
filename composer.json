@@ -1,7 +1,7 @@
 {
     "name": "anisaronno/laravel-media-gallery",
     "description": "Laravel Settings Table",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "license": "MIT",
     "keywords": [
         "laravel",
@@ -22,7 +22,6 @@
     "require": {
         "php": "^7.4|^8.0",
         "anisaronno/laravel-cache-control": "^0.0.1",
-        "anisaronno/laravel-media-helper": "^0.1.0",
         "laravel/framework": "^8.0|^9.0|^10.0"
     },
     "require-dev": {
