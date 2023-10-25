@@ -1,2 +1,19 @@
 workbench:
-  start: '/'
+    welcome: true
+    install: true
+    start: /gallery
+    user: contact@anichur.com
+    guard: web
+    sync:
+        - from: ./public/
+          to: public/vendor/gallery
+    build:
+        - asset-publish
+        - create-sqlite-db
+        - migrate:refresh
+    assets:
+        - gallery-assets
+    discovers:
+        web: false
+        api: true
+        commands: false

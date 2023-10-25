@@ -1,7 +1,7 @@
 {
     "name": "anisaronno/laravel-media-gallery",
     "description": "Laravel Settings Table",
-    "version": "0.1.2",
+    "version": "0.1.4",
     "license": "MIT",
     "keywords": [
         "laravel",
@@ -22,13 +22,12 @@
     "require": {
         "php": "^7.4|^8.0",
         "anisaronno/laravel-cache-control": "^0.0.1",
-        "laravel/framework": "^8.0|^9.0|^10.0"
+        "laravel/framework": "^8.0|^9.0|^10.0",
+        "anisaronno/laravel-media-helper": "^0.1.0"
     },
     "require-dev": {
-        "mockery/mockery": "^1.4",
-        "orchestra/testbench": "^8.0",
-        "phpunit/phpunit": "^9.0",
-        "pestphp/pest": "^1.21"
+        "orchestra/testbench": "^8.13",
+        "phpunit/phpunit": "^10.4"
     },
     "autoload": {
         "psr-4": {
@@ -37,25 +36,21 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "AnisAronno\\MediaGallery\\Tests\\": "tests"
+            "AnisAronno\\MediaGallery\\Tests\\": "tests",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "scripts": {
-        "analyse": "vendor/bin/phpstan analyse",
-        "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage"
+        "test": "vendor/bin/phpunit",
+        "test-f": "vendor/bin/phpunit --filter"
     },
     "extra": {
         "laravel": {
             "providers": [
                 "AnisAronno\\MediaGallery\\MediaGalleryServiceProvider"
             ]
-        }
-    },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
         }
     },
     "minimum-stability": "dev",
