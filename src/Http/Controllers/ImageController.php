@@ -2,7 +2,6 @@
 
 namespace AnisAronno\MediaGallery\Http\Controllers;
 
-use AnisAronno\LaravelCacheMaster\CacheControl;
 use AnisAronno\MediaGallery\Helpers\CacheKey;
 use AnisAronno\MediaGallery\Helpers\ImageDataProcessor;
 use AnisAronno\MediaGallery\Http\Requests\StoreImageRequest;
@@ -13,9 +12,18 @@ use AnisAronno\MediaHelper\Facades\Media;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 
 class ImageController extends Controller
 {
+    public function __construct()
+    {
+        $guard = config()->has('gallery.guard') ? config('gallery.guard') : [];
+        $this->middleware($guard)->only(['store', 'update', 'destroy', 'groupDelete']); 
+        $this->middleware($guard)->except(['index', 'show']); 
+    }
+
     /**
      * Get ALl Image
      *
@@ -24,24 +32,24 @@ class ImageController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $orderBy = $request->query('orderBy', 'created_at');
-        $order = $request->query('order', 'desc');
-        $search = $request->query('search', '');
-        $startDate = $request->query('startDate', '');
-        $endDate = $request->query('endDate', '');
-        $page = $request->query('page', 1);
+        $queryParams = request()->query();
+        ksort($queryParams);
+        $queryString = http_build_query($queryParams);
+        $mediaGalleryCacheKey = CacheKey::getMediaGalleryCacheKey();
+        $key =  $mediaGalleryCacheKey.md5($queryString);
 
-        $imageCacheKey = CacheKey::getImageCacheKey();
+        $cacheTTL = Config::get('gallery.cache_expiry_time', 1440);  
 
-        $key =  $imageCacheKey.md5(serialize([$orderBy, $order,  $page, $search, $startDate, $endDate,  ]));
-
-        $images = CacheControl::init($imageCacheKey)->remember(
+        $images = Cache::remember(
             $key,
-            now()->addDay(),
+            now()->addMinutes($cacheTTL),
             function () use ($request) {
                 return Image::query()
                     ->when($request->has('search'), function ($query) use ($request) {
                         $query->where('title', 'LIKE', '%' . $request->input('search') . '%');
+                    })
+                    ->when($request->has('directory'), function ($query) use ($request) {
+                        $query->where('directory', $request->input('directory'));
                     })
                     ->when($request->has('startDate') && $request->has('endDate'), function ($query) use ($request) {
                         $query->whereBetween('created_at', [
@@ -53,6 +61,8 @@ class ImageController extends Controller
                     ->paginate(20)->withQueryString();
             }
         );
+
+        Cache::put($mediaGalleryCacheKey, array_merge(Cache::get($mediaGalleryCacheKey, []), [$key]));
 
         return response()->json(ImageResources::collection($images));
     }

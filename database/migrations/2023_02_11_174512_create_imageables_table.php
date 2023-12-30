@@ -19,6 +19,9 @@ return new class () extends Migration {
             $table->string('imageable_type');
             $table->tinyInteger('is_featured')->default(0);
             $table->timestamps();
+
+            $table->index(['imageable_id', 'imageable_type']);
+
         });
     }
 

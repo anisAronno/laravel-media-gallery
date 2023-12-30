@@ -3,10 +3,19 @@
 namespace AnisAronno\MediaGallery\Traits;
 
 use AnisAronno\MediaGallery\Models\Image;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 trait HasMedia
 {
+    /**
+     * Get all images owned by this user/team.
+     */
+    public function ownedImages(): MorphMany
+    {
+        return $this->morphMany(Image::class, 'owner', 'owner_type', 'owner_id');
+    }
+
     public function images(): MorphToMany
     {
         return $this->morphToMany(Image::class, 'imageable')

@@ -25,7 +25,6 @@ class UpdateImageRequest extends FormRequest
     {
         return [
             'title' => 'nullable|string|max:250|min:3',
-            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,svg,webp|max:2048',
         ];
     }
 }

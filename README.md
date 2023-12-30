@@ -6,15 +6,13 @@
     -   [Table of Contents](#table-of-contents)
     -   [Introduction](#introduction)
     -   [Installation](#installation)
-    -   [Usage Guide for Laravel Media Helper](#usage-guide-for-laravel-media-helper)
-    -   [Use as a Media Gallery with Storing Media in DB](#use-as-a-media-gallery-with-storing-media-in-db)
+    -   [Publish Migration and Config](#publish-migration-and-config)
         -   [Publish Migration, Config](#publish-migration-config)
-        -   [Run Migration](#run-migration)
-        -   [Run Seeder](#run-seeder)
-        -   [Define Relation in User Model](#define-relation-in-user-model)
-        -   [Use in Another Model for Storing Media](#use-in-another-model-for-storing-media)
-        -   [Use Seeder with Relation Mapping](#use-seeder-with-relation-mapping)
-    -   [Media/Image Retrieve, Store, Update and Delete](#mediaimage-retrieve-store-update-and-delete)
+    -   [Uses](#uses)
+        -   [Eloquent Factories Relation Mapping](#eloquent-factories-relation-mapping)
+        -   [Retrieve media by owner](#retrieve-media-by-owner)
+    -   [API Route for Media/Image](#api-route-for-mediaimage)
+    -   [Authentication](#authentication)
     -   [Use Media with Relational Model](#use-media-with-relational-model)
     -   [Working with Single or Featured Image](#working-with-single-or-featured-image)
     -   [Helper Methods](#helper-methods)
@@ -24,7 +22,7 @@
 
 ## Introduction
 
-The Laravel Media Gallery simplifies the management of media and image files in your Laravel project. This README provides installation instructions, usage examples, and additional information.
+The Laravel Media Gallery simplifies media and image file management in your Laravel project. This README provides installation instructions, usage examples, and additional information.
 
 ## Installation
 
@@ -34,29 +32,25 @@ To get started, install the package using Composer:
 composer require anisaronno/laravel-media-gallery
 ```
 
-## Usage Guide for Laravel Media Helper
-
-For detailed usage information for media helper, please refer to the [Laravel Media Helper GitHub Repository](https://github.com/anisAronno/Laravel-Media-Helper).
-
-## Use as a Media Gallery with Storing Media in DB
+## Publish Migration and Config
 
 For media library features, follow these steps:
 
 ### Publish Migration, Config
 
-Publish the migration file
+Publish the migration, factory and seeder file:
 
 ```shell
 php artisan vendor:publish --tag=gallery-migration
 ```
 
-Publish the Config file
+Publish the Config file:
 
 ```shell
 php artisan vendor:publish --tag=gallery
 ```
 
-### Run Migration
+Run Migration
 
 Apply the migrations to set up the media storage table:
 
@@ -64,56 +58,46 @@ Apply the migrations to set up the media storage table:
 php artisan migrate
 ```
 
-### Run Seeder
+## Uses
 
-Seed the media storage table with initial data:
-
-```shell
-php artisan db:seed --class=\\AnisAronno\\MediaGallery\\Database\\Seeders\\ImageSeeder
-```
-
-### Define Relation in User Model
-
-If you want to associate media with a user, add the following relation in your User model:
-
-```php
-public function images(): HasMany
-{
-    return $this->hasMany(Image::class, 'user_id', 'id');
-}
-```
-
-### Use in Another Model for Storing Media
-
-To use media storage in another model (e.g., Blog, Product), add the `HasMedia` trait:
+To use media storage in any model (e.g., User Blog, Product), add the `HasMedia` trait:
 
 ```php
 use AnisAronno\MediaGallery\Traits\HasMedia;
 use HasMedia;
 ```
 
-### Use Seeder with Relation Mapping
+### Eloquent Factories Relation Mapping
 
-If you want to set up seed data with relation mapping (e.g., User has Blog, Blog uses HasMedia Trait), follow this code for creating a seeder:
+For setting up seed data with relation mapping (e.g., User has Blog, Blog uses HasMedia Trait), use the following code in a seeder:
 
 ```php
-use App\Models\Blog;
-use App\Models=User;
-use Database\Factories\ImageFactory;
+use App\Models\User;
+use AnisAronno\MediaGallery\Database\Factories\ImageFactory;
 
-User::factory()->count(10)
-    ->has(
-        Blog::factory()->count(10)
-        ->has(ImageFactory::new()->count(5), 'images')
-        ->afterCreating(function ($blog) {
-            $blog->images->first()->pivot->is_featured = 1;
-            $blog->images->first()->pivot->save();
-        })
-    )
+User::factory(20)
+    ->has(ImageFactory::new()->count(5), 'images')
+    ->afterCreating(function ($blog)
+    {
+        $blog->images->first()->pivot->is_featured = 1;
+        $blog->images->first()->pivot->save();
+    })
     ->create();
 ```
 
-## Media/Image Retrieve, Store, Update and Delete
+### Retrieve media by owner
+
+To retrieve media by the user, use the `HasMedia` trait on the User/Team/Admin or any other model authorized to upload media:
+
+```php
+use AnisAronno\MediaGallery\Traits\HasMedia;
+use HasMedia;
+
+$user = User::find(1); // or auth()->user();
+$user->ownedImages();
+```
+
+## API Route for Media/Image
 
 To manage your media storage, you can use the following routes:
 
@@ -124,9 +108,17 @@ To manage your media storage, you can use the following routes:
 -   Update an image: `api/image/update` (POST)
 -   Delete all images: `image/delete-all` (POST)
 
+## Authentication
+
+You can customize the authentication guard for the routes by publishing the config file and changing the 'guard' key to your desired authentication guard:
+
+```
+'guard' => ['auth'],
+```
+
 ## Use Media with Relational Model
 
-If you want to store images for a relational model (e.g., Blog), you can use the following methods:
+For storing images for a relational model (e.g., Blog), use the following methods:
 
 -   Attach: `$blog->images()->attach(array $id)`
 -   Sync: `$blog->images()->sync(array $id)`
@@ -154,6 +146,7 @@ You can also use helper methods for media management:
 To retrieve media/images from a relational model:
 
 -   Fetch all images as an array: `$blog->images`
+
 -   Fetch the featured image only: `$blog->image`
 
 You can access image properties like URL, title, mimes, size, and type:

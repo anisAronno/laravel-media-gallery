@@ -2,71 +2,83 @@
 
 namespace AnisAronno\MediaGallery\Observers;
 
-use AnisAronno\LaravelCacheMaster\CacheControl;
 use AnisAronno\MediaGallery\Helpers\CacheKey;
 use AnisAronno\MediaGallery\Models\Image;
+use Illuminate\Support\Facades\Cache;
 
 class ImageObserver
 {
-    protected $imageCacheKey = '';
+    protected $mediaGalleryCacheKey = '';
 
     public function __construct()
     {
-        $this->imageCacheKey = CacheKey::getImageCacheKey();
+        $this->mediaGalleryCacheKey = CacheKey::getMediaGalleryCacheKey();
     }
 
     /**
      * Handle the Image "created" event.
      *
-     * @param  \AnisAronno\MediaGallery\Models\Image  $image
+     * @param  Image  $image
      * @return void
      */
     public function created(Image $image)
     {
-        CacheControl::forgetCache($this->imageCacheKey);
+        $this->clearCache();
     }
 
     /**
      * Handle the Image "updated" event.
      *
-     * @param  \AnisAronno\MediaGallery\Models\Image  $image
+     * @param  Image  $image
      * @return void
      */
     public function updated(Image $image)
     {
-        CacheControl::forgetCache($this->imageCacheKey);
+        $this->clearCache();
     }
 
     /**
      * Handle the Image "deleted" event.
      *
-     * @param  \AnisAronno\MediaGallery\Models\Image  $image
+     * @param  Image  $image
      * @return void
      */
     public function deleted(Image $image)
     {
-        CacheControl::forgetCache($this->imageCacheKey);
+        $this->clearCache();
     }
 
     /**
      * Handle the Image "restored" event.
      *
-     * @param  \AnisAronno\MediaGallery\Models\Image  $image
+     * @param  Image  $image
      * @return void
      */
     public function restored(Image $image)
     {
-        CacheControl::forgetCache($this->imageCacheKey);
+        $this->clearCache();
     }
 
     /**
      * Handle the Image "force deleted" event.
      *
-     * @param  \AnisAronno\MediaGallery\Models\Image  $image
+     * @param  Image  $image
      * @return void
      */
     public function forceDeleted(Image $image)
     {
-        CacheControl::forgetCache($this->imageCacheKey);
+        $this->clearCache();
     }
+
+    private function clearCache()
+    {
+        $keys = (array) Cache::get($this->mediaGalleryCacheKey, []);
+
+        foreach ($keys as $key) {
+            Cache::forget($key);
+        }
+
+        Cache::forget($this->mediaGalleryCacheKey);
+    }
+
 }

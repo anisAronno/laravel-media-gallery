@@ -2,9 +2,6 @@
 
 namespace AnisAronno\MediaGallery\Models;
 
-use AnisAronno\MediaGallery\Database\Factories\ImageFactory;
-use AnisAronno\MediaHelper\Facades\Media;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,25 +15,17 @@ class Image extends Model
         'mimes',
         'type',
         'size',
-        'user_id',
+        'directory',
+        'owner_id',
+        'owner_type'
     ];
-
+ 
     /**
-     * Override newFactory Method for mapping model and factory
-     * @return ImageFactory
+     * Get the owner of the image (User or Team).
      */
-    protected static function newFactory()
+    public function owner()
     {
-        return ImageFactory::new();
+        return $this->morphTo('owner', 'owner_type', 'owner_id');
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
-
-    public function getUrlAttribute($value)
-    {
-        return  $this->attributes['url'] = Media::getURL($value);
-    }
 }

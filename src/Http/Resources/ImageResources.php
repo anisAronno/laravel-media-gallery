@@ -2,6 +2,7 @@
 
 namespace AnisAronno\MediaGallery\Http\Resources;
 
+use AnisAronno\MediaHelper\Facades\Media;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
@@ -18,10 +19,11 @@ class ImageResources extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'url' =>  $this->url,
+            'url' =>  Media::getURL($this->url),
             'mimes' => $this->mimes,
             'type' => $this->type,
             'size' => $this->size,
+            'directory' => $this->directory,
             'created_at' => Carbon::parse($this->created_at)->diffForHumans(),
         ];
     }

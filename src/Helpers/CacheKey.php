@@ -8,9 +8,9 @@ class CacheKey
      * Get Image CacheKey
      * @return string
      */
-    public static function getImageCacheKey(): string
+    public static function getMediaGalleryCacheKey(): string
     {
-        return '_image_';
+        return 'media_gallery_';
     }
 
 }
