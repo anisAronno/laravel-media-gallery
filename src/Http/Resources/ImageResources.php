@@ -17,13 +17,13 @@ class ImageResources extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'url' =>  Media::getURL($this->url),
-            'mimes' => $this->mimes,
-            'type' => $this->type,
-            'size' => $this->size,
-            'directory' => $this->directory,
+            'id'         => $this->id,
+            'title'      => $this->title,
+            'url'        => Media::getURL($this->url),
+            'mimes'      => $this->mimes,
+            'type'       => $this->type,
+            'size'       => $this->size,
+            'directory'  => $this->directory,
             'created_at' => Carbon::parse($this->created_at)->diffForHumans(),
         ];
     }

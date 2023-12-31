@@ -8,14 +8,6 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 trait HasMedia
 {
-    /**
-     * Get all images owned by this user/team.
-     */
-    public function ownedImages(): MorphMany
-    {
-        return $this->morphMany(Image::class, 'owner', 'owner_type', 'owner_id');
-    }
-
     public function images(): MorphToMany
     {
         return $this->morphToMany(Image::class, 'imageable')
@@ -35,10 +27,10 @@ trait HasMedia
     }
 
     /**
-     * Media Attach/Store with DB
+     * Media Attach/Store with DB.
      *
      * @param array $ids
-     * @param boolean $isFeatured
+     * @param bool $isFeatured
      * @return void
      */
     public function attachImages(array $ids, $isFeatured = false): void
@@ -49,24 +41,25 @@ trait HasMedia
             static::images()->attach($ids);
         }
     }
+
     /**
-     * Media Sync with DB
+     * Media Sync with DB.
      *
      * @param array $ids
-     * @param boolean $isFeatured
+     * @param bool $isFeatured
      * @return void
      */
     public function syncImages(array $ids, $isFeatured = false): void
     {
-
         if ($isFeatured) {
             static::images()->sync($ids, ['is_featured' => 1]);
         } else {
             static::images()->sync($ids);
         }
     }
+
     /**
-     * Detach Images with DB
+     * Detach Images with DB.
      *
      * @param array $ids
      * @return void
