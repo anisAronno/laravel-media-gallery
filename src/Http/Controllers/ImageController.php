@@ -88,7 +88,7 @@ class ImageController extends Controller
     }
 
     /**
-     *   Image store.
+     * Image store.
      *
      * @param StoreImageRequest $request
      * @return JsonResponse
