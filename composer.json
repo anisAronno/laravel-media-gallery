@@ -1,7 +1,7 @@
 {
     "name": "anisaronno/laravel-media-gallery",
     "description": "Laravel Settings Table",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "license": "MIT",
     "keywords": [
         "laravel",
@@ -15,7 +15,7 @@
             "name": "MD. Anichur Rahaman",
             "email": "contact@anichur.com",
             "homepage": "https://anichur.com",
-            "role": "Developer"
+            "role": "Author, Developer"
         }
     ],
     "homepage": "https://github.com/anisAronno/laravel-media-gallery",

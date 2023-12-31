@@ -11,11 +11,11 @@
     -   [Uses](#uses)
         -   [Eloquent Factories Relation Mapping](#eloquent-factories-relation-mapping)
         -   [Retrieve media by owner](#retrieve-media-by-owner)
-    -   [API Route for Media/Image](#api-route-for-mediaimage)
-    -   [Authentication](#authentication)
+    -   [Authentication and Configuration](#authentication-and-configuration)
     -   [Use Media with Relational Model](#use-media-with-relational-model)
     -   [Working with Single or Featured Image](#working-with-single-or-featured-image)
     -   [Helper Methods](#helper-methods)
+    -   [API Route for Media/Image](#api-route-for-mediaimage)
     -   [Fetch Media/Image from Relational Model](#fetch-mediaimage-from-relational-model)
     -   [Contribution Guide](#contribution-guide)
     -   [License](#license)
@@ -91,29 +91,45 @@ To retrieve media by the user, use the `HasMedia` trait on the User/Team/Admin o
 
 ```php
 use AnisAronno\MediaGallery\Traits\HasMedia;
-use HasMedia;
+
+use HasOwnedImages;
 
 $user = User::find(1); // or auth()->user();
 $user->ownedImages();
 ```
 
-## API Route for Media/Image
+## Authentication and Configuration
 
-To manage your media storage, you can use the following routes:
-
--   Get all images: `api/image` (GET)
--   Get a single image: `api/image/{id}` (GET)
--   Store an image: `api/image` (POST)
--   Delete an image: `api/image/{id}` (DELETE)
--   Update an image: `api/image/update` (POST)
--   Delete all images: `image/delete-all` (POST)
-
-## Authentication
-
-You can customize the authentication guard for the routes by publishing the config file and changing the 'guard' key to your desired authentication guard:
+You can customize the authentication guard for the routes by [publishing the config file](#publish-migration-and-config) and changing the 'guard' key to your desired authentication guard:
+`Default Guard ['auth']`
 
 ```
 'guard' => ['auth'],
+```
+
+Or use api middleware
+
+```
+'guard' => ['auth:sanctum'],
+```
+
+If permitted to view all media anyone
+`Default value true `
+
+```
+'view_all_media_anyone' => true,
+```
+
+If permitted to batch delete set secret key adn use it as `request parameter`
+
+```
+ 'batch_delete_secret'   => '1a463c2c-81b0-441e-9e4f-04691a7e5e0f',
+```
+
+Set Cache Expiry time `Default value 1440 `
+
+```
+    'cache_expiry_time'     => 1440,
 ```
 
 ## Use Media with Relational Model
@@ -140,6 +156,17 @@ You can also use helper methods for media management:
 
 -   For Sync: `$blog->syncImages(array $ids, $isFeatured = false)`
 -   For Delete: `$blog->detachImages(array $ids, $isFeatured = false)`
+
+## API Route for Media/Image
+
+To manage your media storage, you can use the following routes:
+
+-   Get all images: `api/image` (GET)
+-   Get a single image: `api/image/{id}` (GET)
+-   Store an image: `api/image` (POST)
+-   Delete an image: `api/image/{id}` (DELETE)
+-   Update an image: `api/image/update/{id}` (POST)
+-   Batch Delete: `image/batch-delete` (POST)
 
 ## Fetch Media/Image from Relational Model
 
