@@ -14,5 +14,4 @@ trait HasOwnedImages
     {
         return $this->morphMany(Image::class, 'owner', 'owner_type', 'owner_id');
     }
- 
 }

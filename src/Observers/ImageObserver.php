@@ -80,5 +80,4 @@ class ImageObserver
 
         Cache::forget($this->mediaGalleryCacheKey);
     }
-
 }

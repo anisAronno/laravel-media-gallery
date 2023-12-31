@@ -17,9 +17,9 @@ class Image extends Model
         'size',
         'directory',
         'owner_id',
-        'owner_type'
+        'owner_type',
     ];
- 
+
     /**
      * Get the owner of the image (User or Team).
      */
@@ -27,5 +27,4 @@ class Image extends Model
     {
         return $this->morphTo('owner', 'owner_type', 'owner_id');
     }
-
 }
