@@ -4,8 +4,9 @@ namespace AnisAronno\MediaGallery\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Image extends Model
+class Media extends Model
 {
     use HasFactory;
 
@@ -20,8 +21,13 @@ class Image extends Model
         'owner_type',
     ];
 
+    public function mediable(): MorphTo
+    {
+        return $this->morphTo('mediable', '');
+    }
+
     /**
-     * Get the owner of the image (User or Team).
+     * Get the owner of the media (User or Team).
      */
     public function owner()
     {

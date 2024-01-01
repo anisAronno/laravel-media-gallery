@@ -1,18 +1,18 @@
 workbench:
     welcome: true
     install: true
-    start: /gallery
+    start: /media
     user: contact@anichur.com
     guard: web
     sync:
         - from: ./public/
-          to: public/vendor/gallery
+          to: public/vendor/media
     build:
         - asset-publish
         - create-sqlite-db
         - migrate:refresh
     assets:
-        - gallery-assets
+        - media-assets
     discovers:
         web: false
         api: true

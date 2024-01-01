@@ -4,16 +4,16 @@
 
 As this project is currently in its initial stage, security updates will be provided for the latest release only.
 
-| Version   | Supported          |
-| --------- | ------------------ |
-| Latest    | :white_check_mark: |
-| Older     | :x:                |
+| Version | Supported          |
+| ------- | ------------------ |
+| Latest  | :white_check_mark: |
+| Older   | :x:                |
 
 ## Reporting a Vulnerability
 
 We take the security of our Media Gallery for Laravel package seriously and encourage the community to report any potential vulnerabilities. If you discover a security issue, please follow these steps:
 
-1. **Report the Vulnerability:** To report a vulnerability, please send an email to `contact@media-gallery.com`. Provide a detailed description of the vulnerability, including steps to reproduce it, if possible.
+1. **Report the Vulnerability:** To report a vulnerability, please send an email to `contact@media-media.com`. Provide a detailed description of the vulnerability, including steps to reproduce it, if possible.
 
 2. **Response Time:** After receiving a vulnerability report, we will acknowledge its receipt within [X hours/days]. Our team will investigate the issue promptly.
 

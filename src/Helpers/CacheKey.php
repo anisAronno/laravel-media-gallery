@@ -5,7 +5,7 @@ namespace AnisAronno\MediaGallery\Helpers;
 class CacheKey
 {
     /**
-     * Get Image CacheKey.
+     * Get Media CacheKey.
      * @return string
      */
     public static function getMediaGalleryCacheKey(): string
