@@ -2,23 +2,27 @@
 
 ## Table of Contents
 
-- [Laravel Media Gallery](#laravel-media-gallery)
-  - [Table of Contents](#table-of-contents)
-  - [Introduction](#introduction)
-  - [Installation](#installation)
-  - [Publish Migration and Config](#publish-migration-and-config)
-    - [Publish Migration, Config](#publish-migration-config)
-  - [Uses](#uses)
-    - [Eloquent Factories Relation Mapping](#eloquent-factories-relation-mapping)
-    - [Retrieve media by owner](#retrieve-media-by-owner)
-  - [Authentication and Configuration](#authentication-and-configuration)
-  - [Use Media with Relational Model](#use-media-with-relational-model)
-  - [Working with Single or Featured Media](#working-with-single-or-featured-media)
-  - [Helper Methods](#helper-methods)
-  - [API Route for Media/Media](#api-route-for-mediamedia)
-  - [Fetch Media/Media from Relational Model](#fetch-mediamedia-from-relational-model)
-  - [Contribution Guide](#contribution-guide)
-  - [License](#license)
+-   [Laravel Media Gallery](#laravel-media-gallery)
+    -   [Table of Contents](#table-of-contents)
+    -   [Introduction](#introduction)
+    -   [Installation](#installation)
+    -   [Publish Migration and Config](#publish-migration-and-config)
+        -   [Publish Migration, Config](#publish-migration-config)
+    -   [Uses](#uses)
+        -   [Eloquent Factories Relation Mapping](#eloquent-factories-relation-mapping)
+        -   [Retrieve media by owner](#retrieve-media-by-owner)
+        -   [Authentication and Configuration](#authentication-and-configuration)
+            -   [Customizing Authentication Guard:](#customizing-authentication-guard)
+            -   [Restricting Media Viewing:](#restricting-media-viewing)
+            -   [Defining Gate for Managing Media:](#defining-gate-for-managing-media)
+            -   [Cache Expiry Time:](#cache-expiry-time)
+    -   [Use Media with Relational Model](#use-media-with-relational-model)
+    -   [Working with Single or Featured Media](#working-with-single-or-featured-media)
+    -   [Helper Methods](#helper-methods)
+    -   [API Route for Media/Media](#api-route-for-mediamedia)
+    -   [Fetch Media/Media from Relational Model](#fetch-mediamedia-from-relational-model)
+    -   [Contribution Guide](#contribution-guide)
+    -   [License](#license)
 
 ## Introduction
 
@@ -76,11 +80,14 @@ use App\Models\User;
 use AnisAronno\MediaGallery\Database\Factories\MediaFactory;
 
 User::factory(20)
-    ->has(MediaFactory::new()->count(5), 'media')
-    ->afterCreating(function ($blog)
+    ->hasAttached(
+        MediaFactory::new()->count(5)
+    )
+    ->afterCreating(function (User $user)
     {
-        $blog->media->first()->pivot->is_featured = 1;
-        $blog->media->first()->pivot->save();
+        $featuredMedia                     = $user->media()->first();
+        $featuredMedia->pivot->is_featured = true;
+        $featuredMedia->pivot->save();
     })
     ->create();
 ```
@@ -98,38 +105,52 @@ $user = User::find(1); // or auth()->user();
 $user->ownedMedia();
 ```
 
-## Authentication and Configuration
+Absolutely, here's the updated text with subheadings for each section:
 
-You can customize the authentication guard for the routes by [publishing the config file](#publish-migration-and-config) and changing the 'guard' key to your desired authentication guard:
-`Default Guard ['auth']`
+### Authentication and Configuration
 
-```
+#### Customizing Authentication Guard:
+
+You can customize the authentication guard for the routes by [publishing the config file](#publish-migration-and-config) and changing the 'guard' key to your desired authentication guard.
+
+```php
 'guard' => ['auth'],
 ```
 
-Or use api middleware
+Alternatively, you can use the API middleware.
 
-```
+```php
 'guard' => ['auth:sanctum'],
 ```
 
-If permitted to view all media anyone
-`Default value true `
+#### Restricting Media Viewing:
 
-```
-'view_all_media_anyone' => true,
-```
+Set `view_all_media_anyone` to `false` to restrict media viewing to user-uploaded images only; default is `true`, allowing all media viewing.
 
-If permitted to batch delete set secret key adn use it as `request parameter`
-
-```
- 'batch_delete_secret'   => '1a463c2c-81b0-441e-9e4f-04691a7e5e0f',
+```php
+'view_all_media_anyone' => false,
 ```
 
-Set Cache Expiry time `Default value 1440 `
+#### Defining Gate for Managing Media:
 
+Defines `canManageMediaContent` gate in `AuthServiceProvider.php` allowing designated users to manage media content.
+
+```php
+use Illuminate\Support\Facades\Gate;
+
+Gate::define('canManageMediaContent', function (User $user) {
+    return in_array($user->email, [
+        'contact@anichur.com',
+    ]);
+});
 ```
-    'cache_expiry_time'     => 1440,
+
+#### Cache Expiry Time:
+
+Set Cache Expiry time. Default value is 1440.
+
+```php
+'cache_expiry_time' => 1440,
 ```
 
 ## Use Media with Relational Model
