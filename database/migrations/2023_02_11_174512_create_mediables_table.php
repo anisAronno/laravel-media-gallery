@@ -17,12 +17,9 @@ return new class() extends Migration
         Schema::create('mediables', function (Blueprint $table)
         {
             $table->foreignIdFor(Media::class)->constrained()->cascadeOnDelete();
-            $table->unsignedBigInteger('mediable_id');
-            $table->string('mediable_type');
+            $table->morphs('mediable');
             $table->tinyInteger('is_featured')->default(0);
             $table->timestamps();
-
-            $table->index(['mediable_id', 'mediable_type']);
         });
     }
 
