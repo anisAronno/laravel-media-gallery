@@ -2,28 +2,22 @@
 
 namespace AnisAronno\MediaGallery\Traits;
 
-use AnisAronno\MediaGallery\Models\Image;
+use AnisAronno\MediaGallery\Models\Media;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 trait HasMedia
 {
-    public function images(): MorphToMany
+    public function media(): MorphToMany
     {
-        return $this->morphToMany(Image::class, 'imageable')
-            ->wherePivot('is_featured', '!=', true)
-            ->withPivot('is_featured')
-            ->withTimestamps();
+        return $this->morphToMany(Media::class, 'mediable')
+        ->withPivot('is_featured')
+        ->withTimestamps();
     }
 
-    public function image()
+    public function featuredMedia()
     {
-        return $this->morphToMany(Image::class, 'imageable')
-            ->wherePivot('is_featured', true)
-            ->withPivot('is_featured')
-            ->withTimestamps()
-            ->latest()
-            ->limit(1);
+        return $this->media()->wherePivot('is_featured', 1)->first();
     }
 
     /**
@@ -33,12 +27,12 @@ trait HasMedia
      * @param bool $isFeatured
      * @return void
      */
-    public function attachImages(array $ids, $isFeatured = false): void
+    public function attachMedia(array $ids, $isFeatured = false): void
     {
         if ($isFeatured) {
-            static::images()->attach($ids, ['is_featured' => 1]);
+            $this->media()->attach($ids, ['is_featured' => 1]);
         } else {
-            static::images()->attach($ids);
+            $this->media()->attach($ids);
         }
     }
 
@@ -49,23 +43,23 @@ trait HasMedia
      * @param bool $isFeatured
      * @return void
      */
-    public function syncImages(array $ids, $isFeatured = false): void
+    public function syncMedia(array $ids, $isFeatured = false): void
     {
         if ($isFeatured) {
-            static::images()->sync($ids, ['is_featured' => 1]);
+            $this->media()->sync($ids, ['is_featured' => 1]);
         } else {
-            static::images()->sync($ids);
+            $this->media()->sync($ids);
         }
     }
 
     /**
-     * Detach Images with DB.
+     * Detach Media with DB.
      *
      * @param array $ids
      * @return void
      */
-    public function detachImages(array $ids): void
+    public function detachMedia(array $ids): void
     {
-        static::images()->detach($ids);
+        $this->media()->detach($ids);
     }
 }

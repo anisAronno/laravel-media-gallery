@@ -6,15 +6,15 @@ use AnisAronno\MediaHelper\Facades\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class ImageDataProcessor
+class MediaDataProcessor
 {
     /**
-     * Image Data Processor.
+     * Media Data Processor.
      *
      * @param Request $request
      * @return array
      */
-    public static function process(Request $request, $field = 'image'): array
+    public static function process(Request $request, $field = 'media'): array
     {
         $data       = [];
         $upload_dir = Str::plural($field);

@@ -3,11 +3,10 @@
 namespace AnisAronno\MediaGallery\Http\Controllers;
 
 use AnisAronno\MediaGallery\Helpers\CacheKey;
-use AnisAronno\MediaGallery\Helpers\ImageDataProcessor;
-use AnisAronno\MediaGallery\Http\Requests\StoreImageRequest;
-use AnisAronno\MediaGallery\Http\Requests\UpdateImageRequest;
-use AnisAronno\MediaGallery\Http\Resources\ImageResources;
-use AnisAronno\MediaGallery\Models\Image;
+use AnisAronno\MediaGallery\Helpers\MediaDataProcessor;
+use AnisAronno\MediaGallery\Http\Requests\StoreMediaRequest;
+use AnisAronno\MediaGallery\Http\Requests\UpdateMediaRequest;
+use AnisAronno\MediaGallery\Http\Resources\MediaResources;
 use AnisAronno\MediaHelper\Facades\Media;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -17,16 +16,16 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
-class ImageController extends Controller
+class MediaController extends Controller
 {
     public function __construct()
     {
-        $guards      = config('gallery.guard', ['auth']);
+        $guards      = config('media.guard', ['auth']);
         $this->middleware($guards);
     }
 
     /**
-     * Get ALl Image.
+     * Get ALl Media.
      *
      * @param Request $request
      * @return JsonResponse
@@ -37,16 +36,16 @@ class ImageController extends Controller
         ksort($queryParams);
         $queryString          = http_build_query($queryParams);
         $mediaGalleryCacheKey = CacheKey::getMediaGalleryCacheKey();
-        $key                  = $mediaGalleryCacheKey.config('gallery.view_all_media_anyone').md5($queryString);
+        $key                  = $mediaGalleryCacheKey.config('media.view_all_media_anyone').md5($queryString);
 
-        $cacheTTL = Config::get('gallery.cache_expiry_time', 1440);
+        $cacheTTL = Config::get('media.cache_expiry_time', 1440);
 
-        $images = Cache::remember(
+        $media = Cache::remember(
             $key,
             now()->addMinutes($cacheTTL),
             function () use ($request)
             {
-                return Image::query()
+                return Media::query()
                     ->when($request->has('search'), function ($query) use ($request)
                     {
                         $query->where('title', 'LIKE', '%'.$request->input('search').'%');
@@ -55,7 +54,7 @@ class ImageController extends Controller
                     {
                         $query->where('directory', $request->input('directory'));
                     })
-                    ->when($request->has('owner_id') || ! config('gallery.view_all_media_anyone'), function ($query) use ($request)
+                    ->when($request->has('owner_id') || ! config('media.view_all_media_anyone'), function ($query) use ($request)
                     {
                         $query->where('owner_id', auth()->id());
                     })
@@ -73,39 +72,39 @@ class ImageController extends Controller
 
         Cache::put($mediaGalleryCacheKey, array_merge(Cache::get($mediaGalleryCacheKey, []), [$key]));
 
-        return ImageResources::collection($images)->response();
+        return MediaResources::collection($media)->response();
     }
 
     /**
-     * Show Image.
+     * Show Media.
      *
      * @param [type] $id
      * @return JsonResponse
      */
     public function show($id): JsonResponse
     {
-        return  (new ImageResources(Image::query()->findOrFail($id)))->response();
+        return  (new MediaResources(Media::query()->findOrFail($id)))->response();
     }
 
     /**
-     * Image store.
+     * Media store.
      *
-     * @param StoreImageRequest $request
+     * @param StoreMediaRequest $request
      * @return JsonResponse
      */
-    public function store(StoreImageRequest $request): JsonResponse
+    public function store(StoreMediaRequest $request): JsonResponse
     {
-        $data               = ImageDataProcessor::process($request);
-        $data['title']      = $request->input('title', 'Image');
+        $data               = MediaDataProcessor::process($request);
+        $data['title']      = $request->input('title', 'Media');
         $data['owner_id']   = auth()->id();
         $data['owner_type'] = $request->user() ? get_class($request->user()) : null;
 
         try {
-            $image = Image::create($data);
+            $media = Media::create($data);
 
             return response()->json([
                 'message' => 'Created successful',
-                'data'    => $image,
+                'data'    => $media,
             ]);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 400);
@@ -113,20 +112,20 @@ class ImageController extends Controller
     }
 
     /**
-     * Image Update.
+     * Media Update.
      *
-     * @param UpdateImageRequest $request
+     * @param UpdateMediaRequest $request
      * @param [type] $id
      * @return JsonResponse
      */
-    public function update(UpdateImageRequest $request, $id): JsonResponse
+    public function update(UpdateMediaRequest $request, $id): JsonResponse
     {
-        $image = Image::query()->findOrFail($id);
+        $media = Media::query()->findOrFail($id);
 
-        abort_unless($image->owner_id === auth()->id(), 403, 'You are not authorized to update this media');
+        abort_unless($media->owner_id === auth()->id(), 403, 'You are not authorized to update this media');
 
         try {
-            $image->update($request->only('title'));
+            $media->update($request->only('title'));
 
             return response()->json(['message' => 'Updated successful']);
         } catch (\Throwable $th) {
@@ -135,21 +134,21 @@ class ImageController extends Controller
     }
 
     /**
-     *  Delete image.
+     *  Delete media.
      *
      * @param [type] $id
      * @return JsonResponse
      */
     public function destroy($id): JsonResponse
     {
-        $image = Image::query()->findOrFail($id);
+        $media = Media::query()->findOrFail($id);
 
-        abort_unless($image->owner_id === auth()->id(), 403, 'You are not authorized to delete this media');
+        abort_unless($media->owner_id === auth()->id(), 403, 'You are not authorized to delete this media');
 
         try {
-            Media::delete($image->url);
+            Media::delete($media->url);
 
-            $image->delete();
+            $media->delete();
 
             return response()->json(['message' => 'Deleted successfull']);
         } catch (\Throwable $th) {
@@ -158,7 +157,7 @@ class ImageController extends Controller
     }
 
     /**
-     * Image Batch Delete.
+     * Media Batch Delete.
      *
      * @param Request $request
      * @return JsonResponse
@@ -167,34 +166,34 @@ class ImageController extends Controller
     {
         $request->validate([
             'secret'       => 'required',
-            'images'       => 'required|array',
+            'media'        => 'required|array',
         ]);
 
-        abort_unless($request->secret === config('gallery.batch_delete_secret'), 403, 'You are not authorized to delete all media');
+        abort_unless($request->secret === config('media.batch_delete_secret'), 403, 'You are not authorized to delete all media');
 
         try {
             return DB::transaction(function () use ($request)
             {
-                $imageIds = $request->input('images');
+                $imageIds = $request->input('media');
 
-                $existingImages = Image::whereIn('id', $imageIds)->get();
-                $existingIds    = $existingImages->pluck('id')->toArray();
+                $existingMedia  = Media::whereIn('id', $imageIds)->get();
+                $existingIds    = $existingMedia->pluck('id')->toArray();
 
                 $missingIds = array_diff($imageIds, $existingIds);
 
                 if (! empty($missingIds)) {
-                    throw new ModelNotFoundException('Images with IDs: '.implode(',', $missingIds).' not found.');
+                    throw new ModelNotFoundException('Media with IDs: '.implode(',', $missingIds).' not found.');
                 }
 
-                $urlsToDelete = $existingImages->pluck('url')->toArray();
+                $urlsToDelete = $existingMedia->pluck('url')->toArray();
 
                 foreach ($urlsToDelete as $url) {
                     Media::delete($url);
                 }
 
-                $deletedImages = $existingImages->each->delete();
+                $deletedMedia = $existingMedia->each->delete();
 
-                if ($deletedImages->count() === count($existingImages)) {
+                if ($deletedMedia->count() === count($existingMedia)) {
                     return response()->json(['message' => 'Deleted successfully']);
                 }
 

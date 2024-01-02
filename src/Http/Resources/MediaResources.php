@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
 
-class ImageResources extends JsonResource
+class MediaResources extends JsonResource
 {
     /**
      * Transform the resource into an array.

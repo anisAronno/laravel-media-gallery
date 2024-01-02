@@ -2,27 +2,27 @@
 
 ## Table of Contents
 
--   [Laravel Media Gallery](#laravel-media-gallery)
-    -   [Table of Contents](#table-of-contents)
-    -   [Introduction](#introduction)
-    -   [Installation](#installation)
-    -   [Publish Migration and Config](#publish-migration-and-config)
-        -   [Publish Migration, Config](#publish-migration-config)
-    -   [Uses](#uses)
-        -   [Eloquent Factories Relation Mapping](#eloquent-factories-relation-mapping)
-        -   [Retrieve media by owner](#retrieve-media-by-owner)
-    -   [Authentication and Configuration](#authentication-and-configuration)
-    -   [Use Media with Relational Model](#use-media-with-relational-model)
-    -   [Working with Single or Featured Image](#working-with-single-or-featured-image)
-    -   [Helper Methods](#helper-methods)
-    -   [API Route for Media/Image](#api-route-for-mediaimage)
-    -   [Fetch Media/Image from Relational Model](#fetch-mediaimage-from-relational-model)
-    -   [Contribution Guide](#contribution-guide)
-    -   [License](#license)
+- [Laravel Media Gallery](#laravel-media-gallery)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Installation](#installation)
+  - [Publish Migration and Config](#publish-migration-and-config)
+    - [Publish Migration, Config](#publish-migration-config)
+  - [Uses](#uses)
+    - [Eloquent Factories Relation Mapping](#eloquent-factories-relation-mapping)
+    - [Retrieve media by owner](#retrieve-media-by-owner)
+  - [Authentication and Configuration](#authentication-and-configuration)
+  - [Use Media with Relational Model](#use-media-with-relational-model)
+  - [Working with Single or Featured Media](#working-with-single-or-featured-media)
+  - [Helper Methods](#helper-methods)
+  - [API Route for Media/Media](#api-route-for-mediamedia)
+  - [Fetch Media/Media from Relational Model](#fetch-mediamedia-from-relational-model)
+  - [Contribution Guide](#contribution-guide)
+  - [License](#license)
 
 ## Introduction
 
-The Laravel Media Gallery simplifies media and image file management in your Laravel project. This README provides installation instructions, usage examples, and additional information.
+The Laravel Media Gallery simplifies media and media file management in your Laravel project. This README provides installation instructions, usage examples, and additional information.
 
 ## Installation
 
@@ -41,13 +41,13 @@ For media library features, follow these steps:
 Publish the migration, factory and seeder file:
 
 ```shell
-php artisan vendor:publish --tag=gallery-migration
+php artisan vendor:publish --tag=media-migration
 ```
 
 Publish the Config file:
 
 ```shell
-php artisan vendor:publish --tag=gallery
+php artisan vendor:publish --tag=media
 ```
 
 Run Migration
@@ -73,14 +73,14 @@ For setting up seed data with relation mapping (e.g., User has Blog, Blog uses H
 
 ```php
 use App\Models\User;
-use AnisAronno\MediaGallery\Database\Factories\ImageFactory;
+use AnisAronno\MediaGallery\Database\Factories\MediaFactory;
 
 User::factory(20)
-    ->has(ImageFactory::new()->count(5), 'images')
+    ->has(MediaFactory::new()->count(5), 'media')
     ->afterCreating(function ($blog)
     {
-        $blog->images->first()->pivot->is_featured = 1;
-        $blog->images->first()->pivot->save();
+        $blog->media->first()->pivot->is_featured = 1;
+        $blog->media->first()->pivot->save();
     })
     ->create();
 ```
@@ -92,10 +92,10 @@ To retrieve media by the user, use the `HasMedia` trait on the User/Team/Admin o
 ```php
 use AnisAronno\MediaGallery\Traits\HasMedia;
 
-use HasOwnedImages;
+use HasOwnedMedia;
 
 $user = User::find(1); // or auth()->user();
-$user->ownedImages();
+$user->ownedMedia();
 ```
 
 ## Authentication and Configuration
@@ -134,55 +134,55 @@ Set Cache Expiry time `Default value 1440 `
 
 ## Use Media with Relational Model
 
-For storing images for a relational model (e.g., Blog), use the following methods:
+For storing media for a relational model (e.g., Blog), use the following methods:
 
--   Attach: `$blog->images()->attach(array $id)`
--   Sync: `$blog->images()->sync(array $id)`
--   Delete: `$blog->images()->detach(array $id)`
+-   Attach: `$blog->media()->attach(array $id)`
+-   Sync: `$blog->media()->sync(array $id)`
+-   Delete: `$blog->media()->detach(array $id)`
 
-## Working with Single or Featured Image
+## Working with Single or Featured Media
 
-To work with a single or featured image, use the `image` method and set `isFeatured` to `true` in the second parameter:
+To work with a single or featured media, use the `featuredMedia` method and set `isFeatured` to `true` in the second parameter:
 
--   Attach: `$blog->image()->attach(array $id, ['is_featured' => 1])`
+-   Attach: `$blog->featuredMedia()->attach(array $id, ['is_featured' => 1])`
 
-Note: Sync and detach are the same; use `image` instead of `images`.
+Note: Sync and detach are the same; use `featuredMedia` instead of `featuredMedia`.
 
 ## Helper Methods
 
 You can also use helper methods for media management:
 
--   For Attach: `$blog->attachImages(array $ids, $isFeatured = false)`
+-   For Attach: `$blog->attachMedia(array $ids, $isFeatured = false)`
 
--   For Sync: `$blog->syncImages(array $ids, $isFeatured = false)`
--   For Delete: `$blog->detachImages(array $ids, $isFeatured = false)`
+-   For Sync: `$blog->syncMedia(array $ids, $isFeatured = false)`
+-   For Delete: `$blog->detachMedia(array $ids, $isFeatured = false)`
 
-## API Route for Media/Image
+## API Route for Media/Media
 
 To manage your media storage, you can use the following routes:
 
--   Get all images: `api/image` (GET)
--   Get a single image: `api/image/{id}` (GET)
--   Store an image: `api/image` (POST)
--   Delete an image: `api/image/{id}` (DELETE)
--   Update an image: `api/image/update/{id}` (POST)
--   Batch Delete: `image/batch-delete` (POST)
+-   Get all media: `api/media` (GET)
+-   Get a single media: `api/media/{id}` (GET)
+-   Store an media: `api/media` (POST)
+-   Delete an media: `api/media/{id}` (DELETE)
+-   Update an media: `api/media/update/{id}` (POST)
+-   Batch Delete: `media/batch-delete` (POST)
 
-## Fetch Media/Image from Relational Model
+## Fetch Media/Media from Relational Model
 
-To retrieve media/images from a relational model:
+To retrieve media/media from a relational model:
 
--   Fetch all images as an array: `$blog->images`
+-   Fetch all media as an array: `$blog->media`
 
--   Fetch the featured image only: `$blog->image`
+-   Fetch the featured media only: `$blog->media`
 
-You can access image properties like URL, title, mimes, size, and type:
+You can access media properties like URL, title, mimes, size, and type:
 
--   `$image->url`
--   `$image->title`
--   `$image->mimes`
--   `$image->size`
--   `$image->type`
+-   `$media->url`
+-   `$media->title`
+-   `$media->mimes`
+-   `$media->size`
+-   `$media->type`
 
 ## Contribution Guide
 

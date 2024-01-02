@@ -2,8 +2,8 @@
 
 namespace AnisAronno\MediaGallery;
 
-use AnisAronno\MediaGallery\Models\Image;
-use AnisAronno\MediaGallery\Observers\ImageObserver;
+use AnisAronno\MediaGallery\Models\Media;
+use AnisAronno\MediaGallery\Observers\MediaObserver;
 use Illuminate\Support\ServiceProvider;
 
 class MediaGalleryServiceProvider extends ServiceProvider
@@ -23,18 +23,18 @@ class MediaGalleryServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
         $this->registerMigration();
         $this->registerConfig();
-        Image::observe(ImageObserver::class);
+        Media::observe(MediaObserver::class);
     }
 
     protected function registerMigration()
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../database/migrations/2023_01_06_195610_create_images_table.php'     => database_path('migrations/'.date('Y_m_d_His', time()).'_create_images_table.php'),
-                __DIR__.'/../database/migrations/2023_02_11_174512_create_imageables_table.php' => database_path('migrations/'.date('Y_m_d_His', time() + 60).'_create_imageables_table.php'),
-                __DIR__.'/../database/factories/ImageFactory.php'                               => database_path('factories/ImageFactory.php'),
-                __DIR__.'/../database/seeder/ImageSeeder.php'                                   => database_path('seeders/ImageSeeder.php'),
-            ], 'gallery-migration');
+                __DIR__.'/../database/migrations/2023_01_06_195610_create_media_table.php'      => database_path('migrations/'.date('Y_m_d_His', time()).'_create_media_table.php'),
+                __DIR__.'/../database/migrations/2023_02_11_174512_create_mediables_table.php'  => database_path('migrations/'.date('Y_m_d_His', time() + 60).'_create_mediables_table.php'),
+                __DIR__.'/../database/factories/MediaFactory.php'                               => database_path('factories/MediaFactory.php'),
+                __DIR__.'/../database/seeder/MediaSeeder.php'                                   => database_path('seeders/MediaSeeder.php'),
+            ], 'media-migration');
         }
     }
 
@@ -46,12 +46,12 @@ class MediaGalleryServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-           __DIR__.'/Config/gallery.php' => config_path('gallery.php'),
-        ], 'gallery');
+           __DIR__.'/Config/media.php' => config_path('media.php'),
+        ], 'media');
 
         $this->mergeConfigFrom(
-            __DIR__.'/Config/gallery.php',
-            'gallery'
+            __DIR__.'/Config/media.php',
+            'media'
         );
     }
 }

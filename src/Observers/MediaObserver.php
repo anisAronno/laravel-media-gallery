@@ -3,10 +3,10 @@
 namespace AnisAronno\MediaGallery\Observers;
 
 use AnisAronno\MediaGallery\Helpers\CacheKey;
-use AnisAronno\MediaGallery\Models\Image;
+use AnisAronno\MediaGallery\Models\Media;
 use Illuminate\Support\Facades\Cache;
 
-class ImageObserver
+class MediaObserver
 {
     protected $mediaGalleryCacheKey = '';
 
@@ -16,56 +16,56 @@ class ImageObserver
     }
 
     /**
-     * Handle the Image "created" event.
+     * Handle the Media "created" event.
      *
-     * @param  Image  $image
+     * @param  Media  $media
      * @return void
      */
-    public function created(Image $image)
+    public function created(Media $media)
     {
         $this->clearCache();
     }
 
     /**
-     * Handle the Image "updated" event.
+     * Handle the Media "updated" event.
      *
-     * @param  Image  $image
+     * @param  Media  $media
      * @return void
      */
-    public function updated(Image $image)
+    public function updated(Media $media)
     {
         $this->clearCache();
     }
 
     /**
-     * Handle the Image "deleted" event.
+     * Handle the Media "deleted" event.
      *
-     * @param  Image  $image
+     * @param  Media  $media
      * @return void
      */
-    public function deleted(Image $image)
+    public function deleted(Media $media)
     {
         $this->clearCache();
     }
 
     /**
-     * Handle the Image "restored" event.
+     * Handle the Media "restored" event.
      *
-     * @param  Image  $image
+     * @param  Media  $media
      * @return void
      */
-    public function restored(Image $image)
+    public function restored(Media $media)
     {
         $this->clearCache();
     }
 
     /**
-     * Handle the Image "force deleted" event.
+     * Handle the Media "force deleted" event.
      *
-     * @param  Image  $image
+     * @param  Media  $media
      * @return void
      */
-    public function forceDeleted(Image $image)
+    public function forceDeleted(Media $media)
     {
         $this->clearCache();
     }
