@@ -30,8 +30,8 @@ class MediaGalleryServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../database/migrations/2023_01_06_195610_create_media_table.php'     => database_path('migrations/'.date('Y_m_d_His', time()).'_create_media_table.php'),
-                __DIR__.'/../database/migrations/2023_02_11_174512_create_mediables_table.php' => database_path('migrations/'.date('Y_m_d_His', time() + 60).'_create_mediables_table.php'),
+                __DIR__.'/../database/migrations/2023_01_06_195610_create_media_table.php'      => database_path('migrations/'.date('Y_m_d_His', time()).'_create_media_table.php'),
+                __DIR__.'/../database/migrations/2023_02_11_174512_create_mediables_table.php'  => database_path('migrations/'.date('Y_m_d_His', time() + 60).'_create_mediables_table.php'),
                 __DIR__.'/../database/factories/MediaFactory.php'                               => database_path('factories/MediaFactory.php'),
                 __DIR__.'/../database/seeder/MediaSeeder.php'                                   => database_path('seeders/MediaSeeder.php'),
             ], 'media-migration');
