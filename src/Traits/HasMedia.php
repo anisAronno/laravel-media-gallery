@@ -3,7 +3,6 @@
 namespace AnisAronno\MediaGallery\Traits;
 
 use AnisAronno\MediaGallery\Models\Media;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 trait HasMedia
