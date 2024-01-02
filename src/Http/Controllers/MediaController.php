@@ -15,6 +15,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class MediaController extends Controller
 {
@@ -169,7 +170,7 @@ class MediaController extends Controller
             'media'        => 'required|array',
         ]);
 
-        abort_unless($request->secret === config('media.batch_delete_secret'), 403, 'You are not authorized to delete all media');
+        abort_unless(Gate::check('canManageMediaContent', [$request->user()]), 403, 'You are not authorized to delete all media');
 
         try {
             return DB::transaction(function () use ($request)
