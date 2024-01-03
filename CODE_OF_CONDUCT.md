@@ -32,7 +32,7 @@ The following behaviors are considered unacceptable within the Media Gallery for
 
 ## Reporting and Enforcement
 
-If you encounter behavior that violates this Code of Conduct, please report it promptly to the project maintainers at `contact@media-media.com`. All reports will be handled with confidentiality and will be reviewed and addressed accordingly. To maintain a safe and welcoming community, appropriate actions will be taken against individuals found violating this Code of Conduct. These actions may include warnings, temporary or permanent bans, and other necessary measures.
+If you encounter behavior that violates this Code of Conduct, please report it promptly to the project maintainers at `contact@anichur.com`. All reports will be handled with confidentiality and will be reviewed and addressed accordingly. To maintain a safe and welcoming community, appropriate actions will be taken against individuals found violating this Code of Conduct. These actions may include warnings, temporary or permanent bans, and other necessary measures.
 
 ## Attribution
 
