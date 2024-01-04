@@ -10,13 +10,16 @@ trait HasMedia
     public function media(): MorphToMany
     {
         return $this->morphToMany(Media::class, 'mediable')
-        ->withPivot('is_featured')
-        ->withTimestamps();
+            ->withPivot('is_featured')
+            ->withTimestamps();
     }
 
     public function featuredMedia()
     {
-        return $this->media()->wherePivot('is_featured', 1)->first();
+        return $this->media()
+            ->wherePivot('is_featured', 1)
+            ->latest()
+            ->limit(1);
     }
 
     /**

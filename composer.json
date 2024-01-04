@@ -1,12 +1,12 @@
 {
-    "name": "anisaronno/laravel-media-media",
+    "name": "anisaronno/laravel-media-gallery",
     "description": "Laravel Settings Table",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "license": "MIT",
     "keywords": [
         "laravel",
         "media",
-        "media",
+        "gallery",
         "WordPress",
         "wedevs"
     ],
