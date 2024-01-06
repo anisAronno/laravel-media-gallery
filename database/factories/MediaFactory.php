@@ -22,8 +22,8 @@ class MediaFactory extends Factory
     public function definition()
     {
         return [
-            'title'     => $this->faker->title(),
-            'caption'   => $this->faker->title(),
+            'title'     => $this->faker->name(),
+            'caption'   => $this->faker->name(),
             'url'       => $this->faker->imageUrl(),
             'mimes'     => 'media/png',
             'type'      => 'media/png',
