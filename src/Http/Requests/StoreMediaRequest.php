@@ -26,7 +26,7 @@ class StoreMediaRequest extends FormRequest
         return [
             'title'   => 'nullable|string|max:250|min:2',
             'caption' => 'nullable|string|max:250|min:2',
-            'media'   => 'required|media|mimes:jpeg,jpg,png,gif,svg,webp|max:20480',
+            'media'   => 'required|file|max:20480',
         ];
     }
 }
