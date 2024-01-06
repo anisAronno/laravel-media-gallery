@@ -21,7 +21,7 @@ class MediaDataProcessor
 
         if ($request->$field) {
             $data['url']       = Media::upload($request, $field, $upload_dir);
-            $data['directory'] = $upload_dir;
+            $data['directory'] = Media::getFileTypeFolder($request->$field->extension())?? '';
             $data['mimes']     = $request->$field->extension();
             $data['type']      = $request->$field->getClientMimeType();
             $data['size']      = number_format($request->$field->getSize() / (1024 * 1024), 2, '.', '').'MB';

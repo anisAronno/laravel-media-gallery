@@ -12,6 +12,7 @@ class Media extends Model
 
     protected $fillable = [
         'title',
+        'caption',
         'url',
         'mimes',
         'type',

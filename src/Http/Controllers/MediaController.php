@@ -21,7 +21,7 @@ class MediaController extends Controller
 {
     public function __construct()
     {
-        $guards      = config('media.guard', ['auth']);
+        $guards = config('media.guard', ['auth']);
         $this->middleware($guards);
     }
 
@@ -41,35 +41,33 @@ class MediaController extends Controller
 
         $cacheTTL = Config::get('media.cache_expiry_time', 1440);
 
-        $media = Cache::remember(
-            $key,
-            now()->addMinutes($cacheTTL),
-            function () use ($request)
-            {
-                return Media::query()
-                    ->when($request->has('search'), function ($query) use ($request)
-                    {
-                        $query->where('title', 'LIKE', '%'.$request->input('search').'%');
-                    })
-                    ->when($request->has('directory'), function ($query) use ($request)
-                    {
-                        $query->where('directory', $request->input('directory'));
-                    })
-                    ->when($request->has('owner_id') || ! config('media.view_all_media_anyone'), function ($query) use ($request)
-                    {
-                        $query->where('owner_id', auth()->id());
-                    })
-                    ->when($request->has('startDate') && $request->has('endDate'), function ($query) use ($request)
-                    {
-                        $query->whereBetween('created_at', [
-                            new \DateTime($request->input('startDate')),
-                            new \DateTime($request->input('endDate')),
-                        ]);
-                    })
-                    ->orderBy($request->input('orderBy', 'id'), $request->input('order', 'desc'))
-                    ->paginate(20)->withQueryString();
-            }
-        );
+        $media = Cache::remember($key, now()->addMinutes($cacheTTL), function () use ($request)
+        {
+            return Media::query()
+                ->when($request->has('search'), function ($query) use ($request)
+                {
+                    $query->where('title', 'LIKE', '%'.$request->input('search').'%')->orWhere('caption', 'LIKE', '%'.$request->input('search').'%');
+                })
+                ->when($request->has('caption'), function ($query) use ($request)
+                {
+                    $query->where('caption', $request->input('caption'));
+                })
+                ->when($request->has('directory'), function ($query) use ($request)
+                {
+                    $query->where('directory', $request->input('directory'));
+                })
+                ->when($request->has('owner_id') || ! config('media.view_all_media_anyone'), function ($query) use ($request)
+                {
+                    $query->where('owner_id', auth()->id());
+                })
+                ->when($request->has('startDate') && $request->has('endDate'), function ($query) use ($request)
+                {
+                    $query->whereBetween('created_at', [new \DateTime($request->input('startDate')), new \DateTime($request->input('endDate'))]);
+                })
+                ->orderBy($request->input('orderBy', 'id'), $request->input('order', 'desc'))
+                ->paginate(20)
+                ->withQueryString();
+        });
 
         Cache::put($mediaGalleryCacheKey, array_merge(Cache::get($mediaGalleryCacheKey, []), [$key]));
 
@@ -84,7 +82,7 @@ class MediaController extends Controller
      */
     public function show($id): JsonResponse
     {
-        return  (new MediaResources(Media::query()->findOrFail($id)))->response();
+        return (new MediaResources(Media::query()->findOrFail($id)))->response();
     }
 
     /**
@@ -97,6 +95,7 @@ class MediaController extends Controller
     {
         $data               = MediaDataProcessor::process($request);
         $data['title']      = $request->input('title', 'Media');
+        $data['caption']    = $request->input('caption', 'Media');
         $data['owner_id']   = auth()->id();
         $data['owner_type'] = $request->user() ? get_class($request->user()) : null;
 
@@ -126,7 +125,7 @@ class MediaController extends Controller
         abort_unless($media->owner_id === auth()->id(), 403, 'You are not authorized to update this media');
 
         try {
-            $media->update($request->only('title'));
+            $media->update($request->only('title', 'caption'));
 
             return response()->json(['message' => 'Updated successful']);
         } catch (\Throwable $th) {
@@ -166,8 +165,8 @@ class MediaController extends Controller
     public function batchDelete(Request $request): JsonResponse
     {
         $request->validate([
-            'secret'       => 'required',
-            'media'        => 'required|array',
+            'secret' => 'required',
+            'media'  => 'required|array',
         ]);
 
         abort_unless(Gate::check('canManageMediaContent', [$request->user()]), 403, 'You are not authorized to delete all media');
@@ -177,8 +176,8 @@ class MediaController extends Controller
             {
                 $imageIds = $request->input('media');
 
-                $existingMedia  = Media::whereIn('id', $imageIds)->get();
-                $existingIds    = $existingMedia->pluck('id')->toArray();
+                $existingMedia = Media::whereIn('id', $imageIds)->get();
+                $existingIds   = $existingMedia->pluck('id')->toArray();
 
                 $missingIds = array_diff($imageIds, $existingIds);
 

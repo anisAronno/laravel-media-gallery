@@ -1,7 +1,7 @@
 {
     "name": "anisaronno/laravel-media-gallery",
     "description": "Laravel Settings Table",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "license": "MIT",
     "keywords": [
         "laravel",
@@ -22,7 +22,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "laravel/framework": "^8.0|^9.0|^10.0",
-        "anisaronno/laravel-media-helper": "^0.1.0"
+        "anisaronno/laravel-media-helper": "*"
     },
     "require-dev": {
         "orchestra/testbench": "^8.13",

@@ -24,8 +24,9 @@ class StoreMediaRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'nullable|string|max:250|min:3',
-            'media' => 'required|media|mimes:jpeg,jpg,png,gif,svg,webp|max:2048',
+            'title'   => 'nullable|string|max:250|min:2',
+            'caption' => 'nullable|string|max:250|min:2',
+            'media'   => 'required|media|mimes:jpeg,jpg,png,gif,svg,webp|max:20480',
         ];
     }
 }
