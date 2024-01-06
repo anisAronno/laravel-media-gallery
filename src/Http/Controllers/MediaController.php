@@ -7,7 +7,7 @@ use AnisAronno\MediaGallery\Helpers\MediaDataProcessor;
 use AnisAronno\MediaGallery\Http\Requests\StoreMediaRequest;
 use AnisAronno\MediaGallery\Http\Requests\UpdateMediaRequest;
 use AnisAronno\MediaGallery\Http\Resources\MediaResources;
-use AnisAronno\MediaHelper\Facades\Media;
+use AnisAronno\MediaGallery\Models\Media;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
