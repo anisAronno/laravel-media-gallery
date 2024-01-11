@@ -8,6 +8,7 @@ use AnisAronno\MediaGallery\Http\Requests\StoreMediaRequest;
 use AnisAronno\MediaGallery\Http\Requests\UpdateMediaRequest;
 use AnisAronno\MediaGallery\Http\Resources\MediaResources;
 use AnisAronno\MediaGallery\Models\Media;
+use AnisAronno\MediaHelper\Facades\Media as MediaHelper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -146,7 +147,7 @@ class MediaController extends Controller
         abort_unless($media->owner_id === auth()->id(), 403, 'You are not authorized to delete this media');
 
         try {
-            Media::delete($media->url);
+            MediaHelper::delete($media->url);
 
             $media->delete();
 
@@ -188,7 +189,7 @@ class MediaController extends Controller
                 $urlsToDelete = $existingMedia->pluck('url')->toArray();
 
                 foreach ($urlsToDelete as $url) {
-                    Media::delete($url);
+                    MediaHelper::delete($url);
                 }
 
                 $deletedMedia = $existingMedia->each->delete();
