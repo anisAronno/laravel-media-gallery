@@ -14,12 +14,9 @@ trait HasMedia
             ->withTimestamps();
     }
 
-    public function featuredMedia()
+    protected function getFeaturedMediaAttribute(): Media
     {
-        return $this->media()
-            ->wherePivot('is_featured', 1)
-            ->latest()
-            ->limit(1);
+        return $this->media->where('pivot.is_featured', 1)->first();
     }
 
     /**

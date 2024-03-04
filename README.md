@@ -2,27 +2,27 @@
 
 ## Table of Contents
 
--   [Laravel Media Gallery](#laravel-media-gallery)
-    -   [Table of Contents](#table-of-contents)
-    -   [Introduction](#introduction)
-    -   [Installation](#installation)
-    -   [Publish Migration and Config](#publish-migration-and-config)
-        -   [Publish Migration, Config](#publish-migration-config)
-    -   [Uses](#uses)
-        -   [Eloquent Factories Relation Mapping](#eloquent-factories-relation-mapping)
-        -   [Retrieve media by owner](#retrieve-media-by-owner)
-        -   [Authentication and Configuration](#authentication-and-configuration)
-            -   [Customizing Authentication Guard:](#customizing-authentication-guard)
-            -   [Restricting Media Viewing:](#restricting-media-viewing)
-            -   [Defining Gate for Managing Media:](#defining-gate-for-managing-media)
-            -   [Cache Expiry Time:](#cache-expiry-time)
-    -   [Use Media with Relational Model](#use-media-with-relational-model)
-    -   [Working with Single or Featured Media](#working-with-single-or-featured-media)
-    -   [Helper Methods](#helper-methods)
-    -   [API Route for Media/Media](#api-route-for-mediamedia)
-    -   [Fetch Media/Media from Relational Model](#fetch-mediamedia-from-relational-model)
-    -   [Contribution Guide](#contribution-guide)
-    -   [License](#license)
+- [Laravel Media Gallery](#laravel-media-gallery)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Installation](#installation)
+  - [Publish Migration and Config](#publish-migration-and-config)
+    - [Publish Migration, Config](#publish-migration-config)
+  - [Uses](#uses)
+    - [Eloquent Factories Relation Mapping](#eloquent-factories-relation-mapping)
+    - [Retrieve media by owner](#retrieve-media-by-owner)
+    - [Authentication and Configuration](#authentication-and-configuration)
+      - [Customizing Authentication Guard:](#customizing-authentication-guard)
+      - [Restricting Media Viewing:](#restricting-media-viewing)
+      - [Defining Gate for Managing Media:](#defining-gate-for-managing-media)
+      - [Cache Expiry Time:](#cache-expiry-time)
+  - [Use Media with Relational Model](#use-media-with-relational-model)
+  - [Working with Single or Featured Media](#working-with-single-or-featured-media)
+  - [Helper Methods](#helper-methods)
+  - [API Route for Media/Media](#api-route-for-mediamedia)
+  - [Fetch Media/Media from Relational Model](#fetch-mediamedia-from-relational-model)
+  - [Contribution Guide](#contribution-guide)
+  - [License](#license)
 
 ## Introduction
 
@@ -165,10 +165,9 @@ For storing media for a relational model (e.g., Blog), use the following methods
 
 To work with a single or featured media, use the `featuredMedia` method and set `isFeatured` to `true` in the second parameter:
 
--   Attach: `$blog->featuredMedia()->attach(array $id, ['is_featured' => 1])`
+-   Attach: `$blog->media()->attach(array $id, ['is_featured' => 1])`
 
-Note: Sync and detach are the same; use `featuredMedia` instead of `featuredMedia`.
-
+Note: Sync and detach are the same.
 ## Helper Methods
 
 You can also use helper methods for media management:
